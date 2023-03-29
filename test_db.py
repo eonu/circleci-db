@@ -36,7 +36,7 @@ engine_fixtures = [lazy_fixture("db2_engine")]
 #     assert version == "DB2 v11.5.7.0"
 
 
-@pytest.mark.parametrize("engine", [lazy_fixture("mssql_engine")])
-def test_mssql(engine):
-    with engine.connect() as conn:
+# @pytest.mark.parametrize("engine", [lazy_fixture("mssql_engine")])
+def test_mssql(mssql_engine):
+    with mssql_engine.connect() as conn:
         pass

@@ -23,7 +23,7 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip install -r ~/repo/requirements.txt
-            echo "pytest test_db.py"
+            pytest test_db.py
 workflows:
   version: 2.1
   build_pipeline:
