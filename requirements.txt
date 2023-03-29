@@ -1,0 +1,3 @@
+sqlalchemy<2
+ibm_db_sa
+testcontainers-mssql

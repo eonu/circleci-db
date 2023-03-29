@@ -1,0 +1,29 @@
+version: 2
+executors:
+  main:
+    machine:
+      image: circleci/python:3.8-buster
+      docker_layer_caching: true
+      version: 20.10.18
+jobs:
+  db_tests:
+    executor: main
+    steps:
+      - run:
+          name: Install Db2 C dependencies
+          command: |
+            sudo dpkg --add-architecture i386
+            sudo apt-get update
+            sudo apt-get -y install cmake unixodbc-dev libaio1 libnuma1 lib32stdc++6 libpam0g:i386 libxml2 python3-dev
+      - run:
+          name: Install Python dependencies and run tests
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+            pytest test_db.py
+workflows:
+  version: 2
+  build_pipeline:
+    jobs:
+      - db_tests
