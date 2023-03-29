@@ -1,4 +1,5 @@
 pytest
+pytest_lazyfixture
 sqlalchemy<2
 ibm_db_sa
 testcontainers-mssql

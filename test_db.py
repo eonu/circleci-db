@@ -1,4 +1,5 @@
 import pytest
+from pytest_lazyfixture import lazy_fixture
 import sqlalchemy
 
 from db2 import Db2Container
@@ -22,7 +23,7 @@ def mssql_engine():
         engine.dispose()
 
 
-engine_fixtures = [pytest.lazy_fixture("db2_engine")]
+engine_fixtures = [lazy_fixture("db2_engine")]
 
 
 @pytest.mark.parametrize("engine", engine_fixtures)
