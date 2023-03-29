@@ -1,17 +1,12 @@
 version: 2.1
-executors:
-  main:
-    machine:
-      - image: circleci/python:3.8-buster
-      - docker_layer_caching: true
-      - version: 20.10.18
 jobs:
   db_tests:
-    executor: main
     docker:
-      image: circleci/python:3.8-buster
-      docker_layer_caching: true
+      - image: circleci/python:3.8-buster
     steps:
+      - setup_remote_docker:
+          version: 20.10.14
+          docker_layer_caching: true
       - run:
           name: Install Db2 C dependencies
           command: |
