@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 executors:
   main:
     machine:
@@ -23,7 +23,7 @@ jobs:
             pip install -r requirements.txt
             pytest test_db.py
 workflows:
-  version: 2
+  version: 2.1
   build_pipeline:
     jobs:
       - db_tests
