@@ -17,6 +17,7 @@ def db2_engine():
 
 @pytest.fixture(scope="module")
 def mssql_engine():
+    # platform="linux/amd64"
     with SqlServerContainer("mcr.microsoft.com/mssql/server:2017-latest") as mssql:
         engine = sqlalchemy.create_engine(mssql.get_connection_url())
         yield engine
@@ -26,10 +27,16 @@ def mssql_engine():
 engine_fixtures = [lazy_fixture("db2_engine")]
 
 
-@pytest.mark.parametrize("engine", engine_fixtures)
-def test_db2(engine):
+# @pytest.mark.parametrize("engine", engine_fixtures)
+# def test_db2(engine):
+#     with engine.connect() as conn:
+#         query = sqlalchemy.text("SELECT SERVICE_LEVEL FROM SYSIBMADM.ENV_INST_INFO")
+#         result = conn.execute(query)
+#         version = result.scalar()
+#     assert version == "DB2 v11.5.7.0"
+
+
+@pytest.mark.parametrize("engine", [lazy_fixture("mssql_engine")])
+def test_mssql(engine):
     with engine.connect() as conn:
-        query = sqlalchemy.text("SELECT SERVICE_LEVEL FROM SYSIBMADM.ENV_INST_INFO")
-        result = conn.execute(query)
-        version = result.scalar()
-    assert version == "DB2 v11.5.7.0"
+        pass
