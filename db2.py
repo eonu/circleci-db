@@ -32,7 +32,7 @@ class Db2Container(DbContainer):
     ) -> None:
         name = None
         if "name" in kwargs:
-            name = kwargs.get("name")
+            name = kwargs.pop("name")
         super(Db2Container, self).__init__(image=image, **kwargs)
         self.username = username or os.environ.get("DB2_USER", "test")
         self.password = password or os.environ.get("DB2_PASSWORD", "test")
