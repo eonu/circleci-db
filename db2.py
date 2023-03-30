@@ -34,7 +34,7 @@ class Db2Container(DbContainer):
         self.password = password or os.environ.get("DB2_PASSWORD", "test")
         self.database = database or os.environ.get("DB2_DATABASE", "test")
         self.port_to_expose = port
-        # self.with_exposed_ports(self.port_to_expose)
+        self.with_exposed_ports(self.port_to_expose)
 
     def _configure(self) -> None:
         self.with_env("DB2INSTANCE", self.username)
@@ -46,6 +46,7 @@ class Db2Container(DbContainer):
         self.with_env("AUTOCONFIG", "false")  # reduces start-up time
 
     def get_connection_url(self, host=None) -> str:
+        print(f"\033[31m{host}\033[0m")
         return super()._create_connection_url(
             dialect="db2",
             username=self.username,

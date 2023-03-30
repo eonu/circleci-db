@@ -11,7 +11,7 @@ from testcontainers.mssql import SqlServerContainer
 def db2_engine():
     container = (
         Db2Container("ibmcom/db2:latest")
-        .with_kwargs(platform="linux/amd64", privileged=True, network="host")
+        .with_kwargs(platform="linux/amd64", privileged=True)
         .with_env("DOCKER_HOST", os.environ["DOCKER_HOST"])
     )
     with container as db2:
@@ -20,17 +20,17 @@ def db2_engine():
         engine.dispose()
 
 
-@pytest.fixture(scope="module")
-def mssql_engine():
-    container = (
-        SqlServerContainer("mcr.microsoft.com/mssql/server:2017-latest")
-        .with_kwargs(platform="linux/amd64", network="host")
-        .with_env("DOCKER_HOST", os.environ["DOCKER_HOST"])
-    )
-    with container as mssql:
-        engine = sqlalchemy.create_engine(mssql.get_connection_url())
-        yield engine
-        engine.dispose()
+# @pytest.fixture(scope="module")
+# def mssql_engine():
+#     container = (
+#         SqlServerContainer("mcr.microsoft.com/mssql/server:2017-latest")
+#         .with_kwargs(platform="linux/amd64")
+#         .with_env("DOCKER_HOST", os.environ["DOCKER_HOST"])
+#     )
+#     with container as mssql:
+#         engine = sqlalchemy.create_engine(mssql.get_connection_url())
+#         yield engine
+#         engine.dispose()
 
 
 @pytest.mark.parametrize("engine", [lazy_fixture("db2_engine")])
