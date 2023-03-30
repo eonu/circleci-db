@@ -9,10 +9,11 @@ from testcontainers.mssql import SqlServerContainer
 
 @pytest.fixture(scope="module")
 def db2_engine():
-    container = Db2Container("ibmcom/db2:latest").with_kwargs(
-        platform="linux/amd64", privileged=True
+    container = (
+        Db2Container("ibmcom/db2:latest")
+        .with_kwargs(platform="linux/amd64", privileged=True)
+        .with_env("DOCKER_HOST", os.environ["DOCKER_HOST"])
     )
-    # .with_env("DOCKER_HOST", os.environ["DOCKER_HOST"])
     with container as db2:
         engine = sqlalchemy.create_engine(db2.get_connection_url())
         yield engine
@@ -21,10 +22,11 @@ def db2_engine():
 
 @pytest.fixture(scope="module")
 def mssql_engine():
-    container = SqlServerContainer(
-        "mcr.microsoft.com/mssql/server:2017-latest"
-    ).with_kwargs(platform="linux/amd64")
-    # .with_env("DOCKER_HOST", os.environ["DOCKER_HOST"])
+    container = (
+        SqlServerContainer("mcr.microsoft.com/mssql/server:2017-latest")
+        .with_kwargs(platform="linux/amd64")
+        .with_env("DOCKER_HOST", os.environ["DOCKER_HOST"])
+    )
     with container as mssql:
         engine = sqlalchemy.create_engine(mssql.get_connection_url())
         yield engine
