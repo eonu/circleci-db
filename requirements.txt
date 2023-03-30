@@ -3,4 +3,5 @@ pytest-lazy-fixture
 sqlalchemy<2
 ibm_db_sa
 # testcontainers-mssql
+pymssql
 testcontainers[mssql]==3.5
