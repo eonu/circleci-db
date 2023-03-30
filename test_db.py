@@ -12,9 +12,11 @@ def db2_engine():
     container = Db2Container(
         "ibmcom/db2:latest",
         platform="linux/amd64",
+        network="host",
         privileged=True,
     )
-    with container.with_env("DOCKER_HOST", os.environ["DOCKER_HOST"]) as db2:
+    # .with_env("DOCKER_HOST", os.environ["DOCKER_HOST"])
+    with container as db2:
         engine = sqlalchemy.create_engine(db2.get_connection_url())
         yield engine
         engine.dispose()
@@ -25,8 +27,10 @@ def mssql_engine():
     container = SqlServerContainer(
         "mcr.microsoft.com/mssql/server:2017-latest",
         platform="linux/amd64",
+        network="host",
     )
-    with container.with_env("DOCKER_HOST", os.environ["DOCKER_HOST"]) as mssql:
+    # .with_env("DOCKER_HOST", os.environ["DOCKER_HOST"])
+    with container as mssql:
         engine = sqlalchemy.create_engine(mssql.get_connection_url())
         yield engine
         engine.dispose()
