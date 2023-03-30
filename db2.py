@@ -30,13 +30,16 @@ class Db2Container(DbContainer):
         port: int = 50_000,
         **kwargs,
     ) -> None:
+        name = None
+        if "name" in kwargs:
+            name = kwargs.get("name")
         super(Db2Container, self).__init__(image=image, **kwargs)
         self.username = username or os.environ.get("DB2_USER", "test")
         self.password = password or os.environ.get("DB2_PASSWORD", "test")
         self.database = database or os.environ.get("DB2_DATABASE", "test")
         self.port_to_expose = port
         self.with_exposed_ports(self.port_to_expose)
-        self._name = kwargs.get("name")
+        self._name = name
 
     def _configure(self) -> None:
         self.with_env("DB2INSTANCE", self.username)
@@ -48,7 +51,7 @@ class Db2Container(DbContainer):
         self.with_env("AUTOCONFIG", "false")  # reduces start-up time
 
     def get_connection_url(self, host=None) -> str:
-        host = str(
+        host = (
             subprocess.check_output(
                 [
                     "docker",
@@ -57,7 +60,9 @@ class Db2Container(DbContainer):
                     "'{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}'",
                     self._name,
                 ]
-            ).strip()
+            )
+            .strip()
+            .decode("utf-8")
         )
         print(f"\033[31m{host}\033[0m")
         return super()._create_connection_url(

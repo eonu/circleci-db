@@ -11,7 +11,7 @@ from testcontainers.mssql import SqlServerContainer
 def db2_engine():
     container = (
         Db2Container("ibmcom/db2:latest")
-        .with_kwargs(platform="linux/amd64", privileged=True, name="ci-db2")
+        .with_kwargs(platform="linux/amd64", privileged=True)
         .with_env("DOCKER_HOST", os.environ["DOCKER_HOST"])
     )
     with container as db2:
