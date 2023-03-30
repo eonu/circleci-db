@@ -30,16 +30,12 @@ class Db2Container(DbContainer):
         port: int = 50_000,
         **kwargs,
     ) -> None:
-        name = None
-        if "name" in kwargs:
-            name = kwargs.pop("name")
         super(Db2Container, self).__init__(image=image, **kwargs)
         self.username = username or os.environ.get("DB2_USER", "test")
         self.password = password or os.environ.get("DB2_PASSWORD", "test")
         self.database = database or os.environ.get("DB2_DATABASE", "test")
         self.port_to_expose = port
         self.with_exposed_ports(self.port_to_expose)
-        self._name = name
 
     def _configure(self) -> None:
         self.with_env("DB2INSTANCE", self.username)
