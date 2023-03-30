@@ -61,8 +61,7 @@ class Db2Container(DbContainer):
             .decode()
             .replace("'", "")
         )
-        print(f"\033[31m{host}\033[0m")
-        return super()._create_connection_url(
+        url = super()._create_connection_url(
             dialect="db2",
             username=self.username,
             password=self.password,
@@ -70,6 +69,8 @@ class Db2Container(DbContainer):
             host=host,
             port=self.port_to_expose,
         )
+        print(f"\033[31m{url}\033[0m")
+        return url
 
     def _connect(self) -> None:
         wait_for_logs(self, "Setup has completed", self.TIMEOUT)

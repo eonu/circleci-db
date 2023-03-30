@@ -1,3 +1,5 @@
+# https://github.com/r-bird/dind-python-3.9-slim-buster/blob/master/entrypoint.sh
+
 FROM python:3.8-slim-buster
 
 ############
