@@ -54,7 +54,7 @@ class Db2Container(DbContainer):
                     "inspect",
                     "-f",
                     "'{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}'",
-                    self._name,
+                    self._container.id,
                 ]
             )
             .strip()
