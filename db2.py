@@ -63,7 +63,8 @@ class Db2Container(DbContainer):
 if __name__ == "__main__":
     import sqlalchemy
 
-    with Db2Container(privileged=True, platform="linux/amd64") as db2:
+    # platform="linux/amd64"
+    with Db2Container(privileged=True) as db2:
         engine = sqlalchemy.create_engine(db2.get_connection_url())
         breakpoint()
         with engine.connect() as conn:
