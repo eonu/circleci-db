@@ -33,16 +33,16 @@ def mssql_engine():
         engine.dispose()
 
 
-# @pytest.mark.parametrize("engine", [lazy_fixture("db2_engine")])
-# def test_db2(engine):
-#     with engine.connect() as conn:
-#         query = sqlalchemy.text("SELECT SERVICE_LEVEL FROM SYSIBMADM.ENV_INST_INFO")
-#         result = conn.execute(query)
-#         version = result.scalar()
-#     assert version == "DB2 v11.5.8.0"
-
-
-@pytest.mark.parametrize("engine", [lazy_fixture("mssql_engine")])
-def test_mssql(engine):
+@pytest.mark.parametrize("engine", [lazy_fixture("db2_engine")])
+def test_db2(engine):
     with engine.connect() as conn:
-        pass
+        query = sqlalchemy.text("SELECT SERVICE_LEVEL FROM SYSIBMADM.ENV_INST_INFO")
+        result = conn.execute(query)
+        version = result.scalar()
+    assert version == "DB2 v11.5.8.0"
+
+
+# @pytest.mark.parametrize("engine", [lazy_fixture("mssql_engine")])
+# def test_mssql(engine):
+#     with engine.connect() as conn:
+#         pass
