@@ -13,9 +13,7 @@ def db2_engine():
         "ibmcom/db2:latest",
         platform="linux/amd64",
         privileged=True,
-    ).with_volume_mapping(
-        os.environ["DOCKER_HOST"], os.environ["DOCKER_HOST"], mode="rw"
-    )
+    ).with_env("DOCKER_HOST", os.environ["DOCKER_HOST"])
     with container as db2:
         engine = sqlalchemy.create_engine(db2.get_connection_url())
         yield engine
@@ -27,9 +25,7 @@ def mssql_engine():
     container = SqlServerContainer(
         "mcr.microsoft.com/mssql/server:2017-latest",
         platform="linux/amd64",
-    ).with_volume_mapping(
-        os.environ["DOCKER_HOST"], os.environ["DOCKER_HOST"], mode="rw"
-    )
+    ).with_env("DOCKER_HOST", os.environ["DOCKER_HOST"])
     with container as mssql:
         engine = sqlalchemy.create_engine(mssql.get_connection_url())
         yield engine
