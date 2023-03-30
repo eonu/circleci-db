@@ -14,6 +14,7 @@ def db2_engine():
         .with_kwargs(platform="linux/amd64", privileged=True, network="host")
         .with_env("DOCKER_HOST", os.environ["DOCKER_HOST"])
     )
+    container.ports = {}
     with container as db2:
         engine = sqlalchemy.create_engine(db2.get_connection_url())
         yield engine
@@ -27,6 +28,7 @@ def mssql_engine():
         .with_kwargs(platform="linux/amd64", network="host")
         .with_env("DOCKER_HOST", os.environ["DOCKER_HOST"])
     )
+    container.ports = {}
     with container as mssql:
         engine = sqlalchemy.create_engine(mssql.get_connection_url())
         yield engine
