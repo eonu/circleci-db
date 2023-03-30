@@ -14,7 +14,6 @@ def db2_engine():
         .with_kwargs(platform="linux/amd64", privileged=True, network="host")
         .with_env("DOCKER_HOST", os.environ["DOCKER_HOST"])
     )
-    container.ports = {}
     with container as db2:
         engine = sqlalchemy.create_engine(db2.get_connection_url())
         yield engine
@@ -28,23 +27,22 @@ def mssql_engine():
         .with_kwargs(platform="linux/amd64", network="host")
         .with_env("DOCKER_HOST", os.environ["DOCKER_HOST"])
     )
-    container.ports = {}
     with container as mssql:
         engine = sqlalchemy.create_engine(mssql.get_connection_url())
         yield engine
         engine.dispose()
 
 
-# @pytest.mark.parametrize("engine", [lazy_fixture("db2_engine")])
-# def test_db2(engine):
-#     with engine.connect() as conn:
-#         query = sqlalchemy.text("SELECT SERVICE_LEVEL FROM SYSIBMADM.ENV_INST_INFO")
-#         result = conn.execute(query)
-#         version = result.scalar()
-#     assert version == "DB2 v11.5.8.0"
-
-
-@pytest.mark.parametrize("engine", [lazy_fixture("mssql_engine")])
-def test_mssql(engine):
+@pytest.mark.parametrize("engine", [lazy_fixture("db2_engine")])
+def test_db2(engine):
     with engine.connect() as conn:
-        pass
+        query = sqlalchemy.text("SELECT SERVICE_LEVEL FROM SYSIBMADM.ENV_INST_INFO")
+        result = conn.execute(query)
+        version = result.scalar()
+    assert version == "DB2 v11.5.8.0"
+
+
+# @pytest.mark.parametrize("engine", [lazy_fixture("mssql_engine")])
+# def test_mssql(engine):
+#     with engine.connect() as conn:
+#         pass

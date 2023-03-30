@@ -34,7 +34,7 @@ class Db2Container(DbContainer):
         self.password = password or os.environ.get("DB2_PASSWORD", "test")
         self.database = database or os.environ.get("DB2_DATABASE", "test")
         self.port_to_expose = port
-        self.with_exposed_ports(self.port_to_expose)
+        # self.with_exposed_ports(self.port_to_expose)
 
     def _configure(self) -> None:
         self.with_env("DB2INSTANCE", self.username)
