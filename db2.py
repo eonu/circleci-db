@@ -47,20 +47,6 @@ class Db2Container(DbContainer):
         self.with_env("AUTOCONFIG", "false")  # reduces start-up time
 
     def get_connection_url(self, host=None) -> str:
-        host = (
-            subprocess.check_output(
-                [
-                    "docker",
-                    "inspect",
-                    "-f",
-                    "'{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}'",
-                    self._container.id,
-                ]
-            )
-            .strip()
-            .decode()
-            .replace("'", "")
-        )
         url = super()._create_connection_url(
             dialect="db2",
             username=self.username,
@@ -69,7 +55,15 @@ class Db2Container(DbContainer):
             host=host,
             port=self.port_to_expose,
         )
-        print(f"\033[31m{url}\033[0m")
+        print(f"URL: \033[31m{url}\033[0m")
+        print(f"self.get_container_host_ip(): {self.get_container_host_ip()}")
+        print(f"self.get_docker_client().host(): {self.get_docker_client().host()}")
+        print(
+            f"self.get_docker_client().gateway_ip(self._container.id): {self.get_docker_client().gateway_ip(self._container.id)}"
+        )
+        print(
+            f"self.get_docker_client().bridge_ip(self._container.id): {self.get_docker_client().bridge_ip(self._container.id)}"
+        )
         return url
 
     def _connect(self) -> None:
