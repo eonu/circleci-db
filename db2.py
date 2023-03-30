@@ -56,7 +56,9 @@ class Db2Container(DbContainer):
         client = docker.DockerClient()
         container = client.containers.get(self._name)
         host = container.attrs["NetworkSettings"]["IPAddress"]
+        raise ValueError(host)
         print(f"\033[31m{host}\033[0m")
+        host = None
         return super()._create_connection_url(
             dialect="db2",
             username=self.username,
