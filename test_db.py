@@ -1,3 +1,4 @@
+import os
 import pytest
 from pytest_lazyfixture import lazy_fixture
 import sqlalchemy
@@ -8,11 +9,12 @@ from testcontainers.mssql import SqlServerContainer
 
 @pytest.fixture(scope="module")
 def db2_engine():
-    with Db2Container(
+    container = Db2Container(
         "ibmcom/db2:latest",
         platform="linux/amd64",
         privileged=True,
-    ) as db2:
+    )
+    with container.with_env("DOCKER_HOST", os.environ["DOCKER_HOST"]) as db2:
         engine = sqlalchemy.create_engine(db2.get_connection_url())
         yield engine
         engine.dispose()
@@ -20,10 +22,11 @@ def db2_engine():
 
 @pytest.fixture(scope="module")
 def mssql_engine():
-    with SqlServerContainer(
+    container = SqlServerContainer(
         "mcr.microsoft.com/mssql/server:2017-latest",
         platform="linux/amd64",
-    ) as mssql:
+    )
+    with container.with_env("DOCKER_HOST", os.environ["DOCKER_HOST"]) as mssql:
         engine = sqlalchemy.create_engine(mssql.get_connection_url())
         yield engine
         engine.dispose()
