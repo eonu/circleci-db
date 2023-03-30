@@ -9,6 +9,11 @@ jobs:
       - setup_remote_docker:
           version: 20.10.14
           docker_layer_caching: true
+      - run:
+          name: Pull Docker images
+          command: |
+            docker pull ibmcom/db2:latest
+            docker pull mcr.microsoft.com/mssql/server:2017-latest
       - checkout
       - run:
           name: Install Db2 C dependencies
