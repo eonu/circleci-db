@@ -17,8 +17,6 @@ from typing import Optional
 from testcontainers.core.generic import DbContainer
 from testcontainers.core.waiting_utils import wait_for_logs
 
-import docker
-
 
 class Db2Container(DbContainer):
     TIMEOUT = 1_000
@@ -53,12 +51,21 @@ class Db2Container(DbContainer):
         self.with_env("AUTOCONFIG", "false")  # reduces start-up time
 
     def get_connection_url(self, host=None) -> str:
-        client = docker.DockerClient()
-        container = client.containers.get(self._name)
-        host = container.attrs["NetworkSettings"]["IPAddress"]
-        raise ValueError(host)
+        host = (
+            subprocess.check_output(
+                [
+                    "docker",
+                    "inspect",
+                    "-f",
+                    "'{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}'",
+                    self._name,
+                ]
+            )
+            .strip()
+            .decode()
+            .replace("'", "")
+        )
         print(f"\033[31m{host}\033[0m")
-        host = None
         return super()._create_connection_url(
             dialect="db2",
             username=self.username,
