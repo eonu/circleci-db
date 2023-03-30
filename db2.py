@@ -36,6 +36,7 @@ class Db2Container(DbContainer):
         self.database = database or os.environ.get("DB2_DATABASE", "test")
         self.port_to_expose = port
         self.with_exposed_ports(self.port_to_expose)
+        self._name = kwargs.get("name")
 
     def _configure(self) -> None:
         self.with_env("DB2INSTANCE", self.username)
@@ -54,7 +55,7 @@ class Db2Container(DbContainer):
                     "inspect",
                     "-f",
                     "'{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}'",
-                    self._kwargs["name"],
+                    self._name,
                 ]
             ).strip()
         )
