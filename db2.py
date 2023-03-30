@@ -11,6 +11,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 import os
+import subprocess
 from typing import Optional
 
 from testcontainers.core.generic import DbContainer
@@ -46,6 +47,17 @@ class Db2Container(DbContainer):
         self.with_env("AUTOCONFIG", "false")  # reduces start-up time
 
     def get_connection_url(self, host=None) -> str:
+        host = str(
+            subprocess.check_output(
+                [
+                    "docker",
+                    "inspect",
+                    "-f",
+                    "'{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}'",
+                    self._kwargs["name"],
+                ]
+            ).strip()
+        )
         print(f"\033[31m{host}\033[0m")
         return super()._create_connection_url(
             dialect="db2",
