@@ -11,7 +11,7 @@ from testcontainers.mssql import SqlServerContainer
 def db2_engine():
     container = (
         Db2Container("ibmcom/db2:latest")
-        .with_kwargs(platform="linux/amd64", privileged=True)
+        .with_kwargs(platform="linux/amd64", privileged=True, network="host")
         .with_env("DOCKER_HOST", os.environ["DOCKER_HOST"])
     )
     with container as db2:
@@ -24,7 +24,7 @@ def db2_engine():
 def mssql_engine():
     container = (
         SqlServerContainer("mcr.microsoft.com/mssql/server:2017-latest")
-        .with_kwargs(platform="linux/amd64")
+        .with_kwargs(platform="linux/amd64", network="host")
         .with_env("DOCKER_HOST", os.environ["DOCKER_HOST"])
     )
     with container as mssql:
@@ -33,16 +33,16 @@ def mssql_engine():
         engine.dispose()
 
 
-@pytest.mark.parametrize("engine", [lazy_fixture("db2_engine")])
-def test_db2(engine):
-    with engine.connect() as conn:
-        query = sqlalchemy.text("SELECT SERVICE_LEVEL FROM SYSIBMADM.ENV_INST_INFO")
-        result = conn.execute(query)
-        version = result.scalar()
-    assert version == "DB2 v11.5.8.0"
-
-
-# @pytest.mark.parametrize("engine", [lazy_fixture("mssql_engine")])
-# def test_mssql(engine):
+# @pytest.mark.parametrize("engine", [lazy_fixture("db2_engine")])
+# def test_db2(engine):
 #     with engine.connect() as conn:
-#         pass
+#         query = sqlalchemy.text("SELECT SERVICE_LEVEL FROM SYSIBMADM.ENV_INST_INFO")
+#         result = conn.execute(query)
+#         version = result.scalar()
+#     assert version == "DB2 v11.5.8.0"
+
+
+@pytest.mark.parametrize("engine", [lazy_fixture("mssql_engine")])
+def test_mssql(engine):
+    with engine.connect() as conn:
+        pass
